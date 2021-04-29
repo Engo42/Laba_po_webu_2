@@ -116,7 +116,7 @@ function gameStart(){
 		document.removeEventListener("mousemove", mouseMoveHandler, false);
 	}
 	if (touch_confirm == false){
-		document.removeEventListener("touchstart", touchStartHandler, false);
+		document.removeEventListener("touchstart", touchEndHandler, false);
 		document.removeEventListener("touchmove", touchMoveHandler, false);
 	}
 	Player = new player(100, 100, 20, 20);

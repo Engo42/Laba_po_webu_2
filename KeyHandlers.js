@@ -59,7 +59,7 @@ document.addEventListener("mousemove", mouseMoveHandler, false);
 function touchEndHandler(e) {
     shoot_press = false;
 }
-function touchHandler(e) {
+function touchMoveHandler(e) {
     touch_confirm = true;
     shoot_press = true;
 	
