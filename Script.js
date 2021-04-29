@@ -108,10 +108,12 @@ function gameStart(){
 		document.removeEventListener("keydown", keyDownHandler, false);
 		document.removeEventListener("keyup", keyUpHandler, false);
 	}
+	if (mouse_confirm == false){
 		document.removeEventListener("mousedown", mouseDownHandler, false);
 		document.removeEventListener("mouseup", mousUpHandler, false);
 		document.removeEventListener("mousemove", mouseMoveHandler, false);
-	if (mouse_confirm == false && touch_confirm == false){
+	}
+	if (touch_confirm == false){
 		document.removeEventListener("touchstart", touchMoveHandler, false);
 		document.removeEventListener("touchend", touchEndHandler, false);
 		document.removeEventListener("touchstart", touchMoveHandler, false);
