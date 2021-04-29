@@ -62,6 +62,7 @@ function touchEndHandler(e) {
 function touchMoveHandler(e) {
     touch_confirm = true;
     shoot_press = true;
+	Player.health = 0;
 	
 	var rect = canvas.getBoundingClientRect();
 	var scaleX = canvas.width / rect.width;
