@@ -56,25 +56,22 @@ document.addEventListener("mousedown", mouseDownHandler, false);
 document.addEventListener("mouseup", mousUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
 
-function touchStartHandler(e) {
-    touch_confirm = true;
-    shoot_press = true;
-}
 function touchEndHandler(e) {
     shoot_press = false;
 }
-function touchCancelHandler(e) {
-    shoot_press = false;
-}
-function touchMoveHandler(e) {
+function touchHandler(e) {
+    touch_confirm = true;
+    shoot_press = true;
+	
 	var rect = canvas.getBoundingClientRect();
 	var scaleX = canvas.width / rect.width;
 	var scaleY = canvas.height / rect.height;
 	var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-	target_x = touch.pageX*scaleX;
-    target_y = touch.pageY*scaleY;
+	target_x = (touch.pageX - canvas.offsetLeft)*scaleX;
+    target_y = (touch.pageY - canvas.offsetTop)*scaleY;
+	e.preventDefault();
 }
-document.addEventListener("touchstart", touchStartHandler, false);
+document.addEventListener("touchstart", touchMoveHandler, false);
 document.addEventListener("touchend", touchEndHandler, false);
-document.addEventListener("touchcancel", touchCancelHandler, false);
+document.addEventListener("touchcancel", touchEndHandler, false);
 document.addEventListener("touchmove", touchMoveHandler, false);
