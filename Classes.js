@@ -26,14 +26,27 @@ class player extends entity {
 		this.isHittable = -1;
 	}
 	frameAction(){
-		if(l_press && this.x - 5 >= this.width/2)
-			this.x -= 5;
-		if(r_press && this.x + 5 <= canvas.width - this.width/2)
-			this.x += 5;
-		if(u_press && this.y - 5 >= this.height/2)
-			this.y -= 5;
-		if(d_press && this.y + 5 <= canvas.height - this.height/2)
-			this.y += 5;
+		if (keyboard_confirm){
+			target_x = this.x;
+			target_y = this.y;
+			if(l_press)
+				target_x -= 100;
+			if(r_press)
+				target_x += 100;
+			if(u_press)
+				target_y -= 100;
+			if(d_press)
+				target_y += 100;
+		}
+		if (10 >= Math.sqrt(Math.pow(target_x-this.x, 2) + Math.pow(target_y-this.y, 2))){
+			this.x = target_x;
+			this.y = target_y;
+		}
+		else {
+			this.x += 10 * (target_x-this.x) / Math.sqrt(Math.pow(target_x-this.x, 2) + Math.pow(target_y-this.y, 2));
+			this.y += 10 * (target_y-this.y) / Math.sqrt(Math.pow(target_x-this.x, 2) + Math.pow(target_y-this.y, 2));
+		}
+		
 		if(this.reload > 0)
 			this.reload--;
 		if(shoot_press && this.reload == 0){
