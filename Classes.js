@@ -38,6 +38,10 @@ class player extends entity {
 			if(d_press)
 				target_y += 100;
 		}
+		if (target_x < 20) target_x = 20;
+		if (target_x < 20) target_x = 20;
+		if (target_y < 20) target_y = 20;
+		if (target_x < 20) target_x = 20;
 		if (10 >= Math.sqrt(Math.pow(target_x-this.x, 2) + Math.pow(target_y-this.y, 2))){
 			this.x = target_x;
 			this.y = target_y;
@@ -101,7 +105,7 @@ class playerBullet extends entity {
 		super(x, y, 3, 3);
 	}
 	frameAction(){
-		this.x += 10;
+		this.x += 15;
 		for (var i = 0; i < EntityContainer.length; i++) {
 			if (EntityContainer[i].isHittable == 1 && checkCollision(this, EntityContainer[i])){
 				EntityContainer[i].health -= 10;
