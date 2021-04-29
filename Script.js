@@ -112,9 +112,10 @@ function gameStart(){
 		document.removeEventListener("mouseup", mousUpHandler, false);
 		document.removeEventListener("mousemove", mouseMoveHandler, false);
 	if (mouse_confirm == false && touch_confirm == false){
-		
-		document.removeEventListener("touchstart", touchEndHandler, false);
-		document.removeEventListener("touchmove", touchMoveHandler, false);
+		document.removeEventListener("touchstart", touchMoveHandler, false);
+		document.removeEventListener("touchend", touchEndHandler, false);
+		document.removeEventListener("touchstart", touchMoveHandler, false);
+		document.removeEventListener("touchcancel", touchEndHandler, false);
 	}
 	Player = new player(100, 100, 20, 20);
 	EntityContainer.push(Player);
