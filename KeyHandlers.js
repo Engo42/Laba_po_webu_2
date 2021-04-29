@@ -57,21 +57,22 @@ document.addEventListener("mouseup", mousUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
 
 function touchEndHandler(e) {
+	e.preventDefault();
     shoot_press = false;
 }
 function touchMoveHandler(e) {
+	e.preventDefault();
     touch_confirm = true;
     shoot_press = true;
 	
 	var rect = canvas.getBoundingClientRect();
 	var scaleX = canvas.width / rect.width;
 	var scaleY = canvas.height / rect.height;
-	var touch = e.originalEvent.changedTouches[0];
+	var touch = e.targetTouches[0];
 	target_x = (touch.pageX - canvas.offsetLeft)*scaleX;
     target_y = (touch.pageY - canvas.offsetTop)*scaleY;
 	ctx.fillText("Xmov " + touch.pageX, 5, canvas.height - 85);
 	ctx.fillText("Ymov " + touch.pageY, 5, canvas.height - 65);
-	e.preventDefault();
 }
 document.addEventListener("touchstart", touchMoveHandler, false);
 document.addEventListener("touchend", touchEndHandler, false);
