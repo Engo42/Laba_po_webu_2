@@ -46,7 +46,6 @@ class player extends entity {
 			this.x += 10 * (target_x-this.x) / Math.sqrt(Math.pow(target_x-this.x, 2) + Math.pow(target_y-this.y, 2));
 			this.y += 10 * (target_y-this.y) / Math.sqrt(Math.pow(target_x-this.x, 2) + Math.pow(target_y-this.y, 2));
 		}
-		
 		if(this.reload > 0)
 			this.reload--;
 		if(shoot_press && this.reload == 0){
