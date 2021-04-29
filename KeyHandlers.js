@@ -66,7 +66,7 @@ function touchMoveHandler(e) {
 	var rect = canvas.getBoundingClientRect();
 	var scaleX = canvas.width / rect.width;
 	var scaleY = canvas.height / rect.height;
-	var touch = e.originalEvent.touches[0];
+	var touch = e.originalEvent.changedTouches[0];
 	target_x = (touch.pageX - canvas.offsetLeft)*scaleX;
     target_y = (touch.pageY - canvas.offsetTop)*scaleY;
 	ctx.fillText("Xmov " + touch.pageX, 5, canvas.height - 85);
