@@ -73,8 +73,6 @@ function draw() {
 			ctx.fillText("Score: " + score.toString(), 5, canvas.height - 5);
 			ctx.fillText("X " + target_x.toString(), 5, canvas.height - 45);
 			ctx.fillText("Y " + target_y.toString(), 5, canvas.height - 25);
-			ctx.fillText("Xmov " + target_x.toString(), 5, canvas.height - 85);
-			ctx.fillText("Ymov " + target_y.toString(), 5, canvas.height - 65);
 			break;
 	}
 }
