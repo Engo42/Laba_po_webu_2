@@ -15,6 +15,7 @@ var best_score = 0;
 var keyboard_confirm = false;
 var mouse_confirm = false;
 var touch_confirm = false;
+var continue_confirm = false;
 var target_x = 0;
 var target_y = 0;
 var gameState = 0;
@@ -47,6 +48,11 @@ function frameLoop() {
 				EntityContainer[i].frameAction();
 			}
 			break;
+		case 2:
+			if (continue_confirm){
+				gameOpen();
+			}
+			break;
 	}
 	draw();
 }
@@ -74,6 +80,19 @@ function draw() {
 			ctx.fillText("X " + target_x.toString(), 5, canvas.height - 45);
 			ctx.fillText("Y " + target_y.toString(), 5, canvas.height - 25);
 			break;
+		case 2:
+			ctx.fillStyle = "#000000";
+			ctx.font = "24px Arial";
+			ctx.fillText("Игра окончена!", 5, canvas.height - 65);
+			if (keyboard_confirm)
+				ctx.fillText("Нажмите 'Z' на клавиатуре, вернуться на главный экран.", 5, canvas.height - 45);
+			if (mouse_confirm)
+				ctx.fillText("Нажмите левую кнопку мыши, чтобы вернуться на главный экран.", 5, canvas.height - 45);
+			if (touch_confirm)
+				ctx.fillText("Коснитесь экрана, чтобы вернуться на главный экран.", 5, canvas.height - 45);
+			ctx.fillText("Ваш счет: " + score.toString(), 5, canvas.height - 25);
+			ctx.fillText("Лучший счет: " + best_score.toString(), 5, canvas.height - 5);
+			break;
 	}
 }
 function nextWave() {
@@ -93,17 +112,41 @@ function spawnEnemies() {
 		case 1:
 			if (enemy_spawn_timer == 0 && enemies_left > 0){
 				enemy_spawn_timer = 180;
-				EntityContainer.push(new enemy(canvas.width + 50, 20 + (canvas.height - 40) * Math.random()));
+				EntityContainer.push(new popcat(canvas.width + 50, 20 + (canvas.height - 40) * Math.random()));
 				enemy_count++;
 				enemies_left--;
 			}
 			break;
 	}
 }
-function openGame(){
+function gameOpen(){
+	gameState = 0;
+	if (keyboard_confirm == false){
+		document.addEventListener("keydown", keyDownHandler, false);
+		document.addEventListener("keyup", keyUpHandler, false);
+	}
+	if (mouse_confirm == false){
+		document.addEventListener("mousedown", mouseDownHandler, false);
+		document.addEventListener("mouseup", mousUpHandler, false);
+		document.addEventListener("mousemove", mouseMoveHandler, false);
+	}
+	if (touch_confirm == false){
+		document.addEventListener("touchstart", touchMoveHandler, false);
+		document.addEventListener("touchend", touchEndHandler, false);
+		document.addEventListener("touchcancel", touchEndHandler, false);
+		document.addEventListener("touchmove", touchMoveHandler, false);
+	}
+	keyboard_confirm = false;
+	mouse_confirm = false;
+	touch_confirm = false;
 }
 function gameStart(){	
 	gameState = 1;
+	enemy_spawn_timer = 60;
+	wave = 0;
+	enemy_count = 0;
+	enemies_left = 0;
+	score = 0;
 	if (keyboard_confirm == false){
 		document.removeEventListener("keydown", keyDownHandler, false);
 		document.removeEventListener("keyup", keyUpHandler, false);
@@ -128,6 +171,7 @@ function gameOver(){
 	if (best_score < score)
 		best_score = score;
 	EntityContainer.length = 0;
+	continue_confirm = false;
 }
 function checkCollision(a, b) {
 	var x_dif = Math.abs(a.x - b.x);
@@ -137,5 +181,5 @@ function checkCollision(a, b) {
 	}
 	return false;
 }
-openGame();
 setInterval(frameLoop, 100/6);
+gameOpen();

@@ -15,6 +15,7 @@ function keyDownHandler(e) {
 	}
     if(e.key == "z" || e.key == "Z" || e.key == "я" || e.key == "Я") {
 		keyboard_confirm = true;
+		continue_confirm = true;
         shoot_press = true;
     }
 }
@@ -35,11 +36,10 @@ function keyUpHandler(e) {
         shoot_press = false;
     }
 }
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
 
 function mouseDownHandler(e) {
     mouse_confirm = true;
+	continue_confirm = true;
     shoot_press = true;
 }
 function mousUpHandler(e) {
@@ -52,9 +52,6 @@ function mouseMoveHandler(e) {
 	target_x = e.offsetX*scaleX;
     target_y = e.offsetY*scaleY;
 }
-document.addEventListener("mousedown", mouseDownHandler, false);
-document.addEventListener("mouseup", mousUpHandler, false);
-document.addEventListener("mousemove", mouseMoveHandler, false);
 
 function touchEndHandler(e) {
 	e.preventDefault();
@@ -63,6 +60,7 @@ function touchEndHandler(e) {
 function touchMoveHandler(e) {
 	e.preventDefault();
     touch_confirm = true;
+	continue_confirm = true;
     shoot_press = true;
 	
 	var rect = canvas.getBoundingClientRect();

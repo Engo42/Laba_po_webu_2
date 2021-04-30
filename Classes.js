@@ -12,6 +12,9 @@ class entity {
 	frameAction(){}
 	frameDraw(){}
 	killed(){}
+	getDamage(damage){
+		this.health -= damage;
+	}
 }
 
 class player extends entity {
@@ -22,8 +25,9 @@ class player extends entity {
 		this.reload = 5;
 		this.overdrive = 0;
 		this.img = new Image();
-		this.img.src = 'Sprie.jpg';
+		this.img.src = 'sprites/Sprie.jpg';
 		this.isHittable = -1;
+		this.invTimer = 0;
 	}
 	frameAction(){
 		if (keyboard_confirm){
@@ -52,42 +56,55 @@ class player extends entity {
 		}
 		if(this.reload > 0)
 			this.reload--;
+		if(this.invTimer > 0)
+			this.invTimer--;
 		if(shoot_press && this.reload == 0){
-			EntityContainer.push(new playerBullet(this.x, this.y));
 			EntityContainer.push(new playerBullet(this.x, this.y));
 			this.reload = 5;
 		}			
 	}
 	frameDraw(){
+		if (Math.floor(this.invTimer/10)%2 == 1)
+			ctx.globalAlpha = 0.5;
 		ctx.drawImage(this.img, this.x - this.width/2, this.y - this.height/2);
+		ctx.globalAlpha = 1;
+	}
+	getDamage(damage){
+		super.getDamage(damage);
+		this.invTimer = 60;
 	}
 }
 
-class enemy extends entity {
+class popcat extends entity {
 	constructor(x, y){
-		super(x, y, 20, 20);
-		this.health = 100;
+		super(x, y, 160, 160);
+		this.health = 160;
 		this.reload = 70;
 		this.y_dir = 1;
 		this.isHittable = 1;
+		this.img_idle = new Image();
+		this.img_idle.src = 'sprites/popcat_idle.png';
+		this.img_shoot = new Image();
+		this.img_shoot.src = 'sprites/popcat_pop.png';
+		this.pop_sound = new Audio('sound/pop_sound.mp3');
 	}
 	frameAction(){
-		this.x -= 1;
-		this.y += this.y_dir;
+		this.x -= 2;
+		this.y += this.y_dir * 2;
 		if (this.y <= 20 || this.y >= canvas.height - 20)
 			this.y_dir = -this.y_dir;
 		this.reload--;
 		if (this.reload == 0){
-			EntityContainer.push(new enemyBullet(this.x, this.y));
-			this.reload = 70;
+			EntityContainer.push(new popcatBullet(this.x, this.y));
+			this.reload = 69;
+			this.pop_sound.play();
 		}
 	}
 	frameDraw(){
-		ctx.beginPath();
-		ctx.fillStyle = "#9500DD";
-		ctx.arc(this.x, this.y, this.width, 0, Math.PI*2);
-		ctx.fill();
-		ctx.closePath();
+		if (this.reload > 40)
+			ctx.drawImage(this.img_shoot, this.x - this.width/2, this.y - this.height/2);
+		else
+			ctx.drawImage(this.img_idle, this.x - this.width/2, this.y - this.height/2);
 	}
 }
 
@@ -122,24 +139,22 @@ class playerBullet extends entity {
 	}
 }
 
-class enemyBullet extends entity {
+class popcatBullet extends entity {
 	constructor(x, y){
-		super(x, y, 10, 10);
+		super(x, y, 80, 80);
+		this.img = new Image();
+		this.img.src = 'sprites/popcat_bullet.png';
 	}
 	frameAction(){
-		this.x -= 4;
+		this.x -= 8;
 		for (var i = 0; i < EntityContainer.length; i++) {
-			if (EntityContainer[i].isHittable == -1 && checkCollision(this, EntityContainer[i])){
-				EntityContainer[i].health -= 10;
+			if (EntityContainer[i].isHittable == -1 && checkCollision(this, EntityContainer[i]) && EntityContainer[i].invTimer == 0){
+				EntityContainer[i].getDamage(10);
 				this.health = 0;
 			}
 		}
 	}
 	frameDraw(){
-		ctx.beginPath();
-		ctx.fillStyle = "#950000";
-		ctx.arc(this.x, this.y, this.width, 0, Math.PI*2);
-		ctx.fill();
-		ctx.closePath();
+		ctx.drawImage(this.img, this.x - this.width/2, this.y - this.height/2);
 	}
 }
