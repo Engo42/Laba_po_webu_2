@@ -19,13 +19,14 @@ class entity {
 
 class player extends entity {
 	constructor(x, y){
-		super(x, y, 80, 80);
+		super(x, y, 40, 40);
 		this.health = 200;
-		this.energy = 100;
+		this.max_speed = 15;
+		this.speed = this.max_speed;
 		this.reload = 5;
 		this.overdrive = 0;
 		this.img = new Image();
-		this.img.src = 'sprites/Sprie.jpg';
+		this.img.src = 'sprites/player.png';
 		this.isHittable = -1;
 		this.invTimer = 0;
 	}
@@ -42,31 +43,35 @@ class player extends entity {
 			if(d_press)
 				target_y += 100;
 		}
+		if (touhou_mode) 
+			this.speed = this.max_speed/1.5;
+		else 
+			this.speed = this.max_speed;
 		if (target_x < 40) target_x = 40;
 		if (target_x > canvas.width - 40) target_x = canvas.width - 40;
 		if (target_y < 40) target_y = 40;
 		if (target_y > canvas.height - 40) target_y = canvas.height - 40;
-		if (10 >= Math.sqrt(Math.pow(target_x-this.x, 2) + Math.pow(target_y-this.y, 2))){
+		if (this.speed >= Math.sqrt(Math.pow(target_x-this.x, 2) + Math.pow(target_y-this.y, 2))){
 			this.x = target_x;
 			this.y = target_y;
 		}
 		else {
-			this.x += 10 * (target_x-this.x) / Math.sqrt(Math.pow(target_x-this.x, 2) + Math.pow(target_y-this.y, 2));
-			this.y += 10 * (target_y-this.y) / Math.sqrt(Math.pow(target_x-this.x, 2) + Math.pow(target_y-this.y, 2));
+			this.x += this.speed * (target_x-this.x) / Math.sqrt(Math.pow(target_x-this.x, 2) + Math.pow(target_y-this.y, 2));
+			this.y += this.speed * (target_y-this.y) / Math.sqrt(Math.pow(target_x-this.x, 2) + Math.pow(target_y-this.y, 2));
 		}
 		if(this.reload > 0)
 			this.reload--;
 		if(this.invTimer > 0)
 			this.invTimer--;
 		if(shoot_press && this.reload == 0){
-			EntityContainer.push(new playerBullet(this.x, this.y));
+			EntityContainer.push(new playerBullet(this.x + 80, this.y));
 			this.reload = 5;
 		}			
 	}
 	frameDraw(){
 		if (Math.floor(this.invTimer/10)%2 == 1)
 			ctx.globalAlpha = 0.5;
-		ctx.drawImage(this.img, this.x - this.width/2, this.y - this.height/2);
+		ctx.drawImage(this.img, this.x - 160, this.y - 160);
 		ctx.globalAlpha = 1;
 	}
 	getDamage(damage){
@@ -98,6 +103,11 @@ class popcat extends entity {
 			EntityContainer.push(new popcatBullet(this.x, this.y));
 			this.reload = 69;
 			this.pop_sound.play();
+		}
+		for (var i = 0; i < EntityContainer.length; i++) {
+			if (EntityContainer[i].isHittable == -1 && checkCollision(this, EntityContainer[i]) && EntityContainer[i].invTimer == 0){
+				EntityContainer[i].getDamage(10);
+			}
 		}
 	}
 	frameDraw(){
@@ -137,6 +147,11 @@ class pogodemon extends entity {
 			this.reload = 111;
 			this.pog_sound.play();
 		}
+		for (var i = 0; i < EntityContainer.length; i++) {
+			if (EntityContainer[i].isHittable == -1 && checkCollision(this, EntityContainer[i]) && EntityContainer[i].invTimer == 0){
+				EntityContainer[i].getDamage(25);
+			}
+		}
 	}
 	frameDraw(){
 		if (this.reload > 80)
@@ -146,21 +161,14 @@ class pogodemon extends entity {
 	}
 }
 
-class obstacle extends entity {
-	constructor(x, y){
-		super(x, y, 40, 40);
-	}
-	frameAction(){
-		this.x -= 1;
-	}
-}
-
 class playerBullet extends entity {
 	constructor(x, y){
 		super(x, y, 3, 3);
+		this.img = new Image();
+		this.img.src = 'sprites/player_bullet.png';
 	}
 	frameAction(){
-		this.x += 15;
+		this.x += 35;
 		for (var i = 0; i < EntityContainer.length; i++) {
 			if (EntityContainer[i].isHittable == 1 && checkCollision(this, EntityContainer[i])){
 				EntityContainer[i].health -= 10;
@@ -169,17 +177,13 @@ class playerBullet extends entity {
 		}
 	}
 	frameDraw(){
-		ctx.beginPath();
-		ctx.fillStyle = "#9500DD";
-		ctx.arc(this.x, this.y, this.width, 0, Math.PI*2);
-		ctx.fill();
-		ctx.closePath();
+		ctx.drawImage(this.img, this.x - 30, this.y - 6);
 	}
 }
 
 class popcatBullet extends entity {
 	constructor(x, y){
-		super(x, y, 80, 80);
+		super(x, y, 40, 40);
 		this.img = new Image();
 		this.img.src = 'sprites/popcat_bullet.png';
 	}
@@ -193,13 +197,13 @@ class popcatBullet extends entity {
 		}
 	}
 	frameDraw(){
-		ctx.drawImage(this.img, this.x - this.width/2, this.y - this.height/2);
+		ctx.drawImage(this.img, this.x - this.width, this.y - this.height);
 	}
 }
 
 class pogodemonBullet extends entity {
 	constructor(x, y, x_dir, y_dir){
-		super(x, y, 80, 80);
+		super(x, y, 40, 40);
 		this.x_dir = x_dir;
 		this.y_dir = y_dir;
 		this.img = new Image();
@@ -212,6 +216,37 @@ class pogodemonBullet extends entity {
 			if (EntityContainer[i].isHittable == -1 && checkCollision(this, EntityContainer[i]) && EntityContainer[i].invTimer == 0){
 				EntityContainer[i].getDamage(25);
 				this.health = 0;
+			}
+		}
+	}
+	frameDraw(){
+		ctx.drawImage(this.img, this.x - this.width, this.y - this.height);
+	}
+}
+
+class rock extends entity {
+	constructor(pos){
+		if (pos < 1)
+			pos = -1;
+		if (pos >= 1 && pos < 2)
+			pos = 0;
+		if (pos >= 2)
+			pos = 1;
+		super(canvas.width + 300, 540 - pos * 370, 100, 340);
+		this.x_dir = -8;
+		this.img = new Image();
+		if (pos == -1)
+			this.img.src = 'sprites/rock_bottom.png';
+		if (pos == 0)
+			this.img.src = 'sprites/rock_middle.png';
+		if (pos == 1)
+			this.img.src = 'sprites/rock_top.png';
+	}
+	frameAction(){
+		this.x += this.x_dir;
+		for (var i = 0; i < EntityContainer.length; i++) {
+			if (EntityContainer[i].isHittable == -1 && checkCollision(this, EntityContainer[i]) && EntityContainer[i].invTimer == 0){
+				EntityContainer[i].getDamage(10);
 			}
 		}
 	}

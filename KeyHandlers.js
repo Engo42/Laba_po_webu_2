@@ -18,6 +18,9 @@ function keyDownHandler(e) {
 		continue_confirm = true;
         shoot_press = true;
     }
+    if(e.key == "x" || e.key == "X" || e.key == "ч" || e.key == "Ч") {
+		touhou_mode = true;
+    }
 }
 function keyUpHandler(e) {
     if(e.key == "ArrowRight") {
@@ -34,6 +37,9 @@ function keyUpHandler(e) {
     }
     if(e.key == "z" || e.key == "Z" || e.key == "я" || e.key == "Я") {
         shoot_press = false;
+    }
+    if(e.key == "x" || e.key == "X" || e.key == "ч" || e.key == "Ч") {
+		touhou_mode = false;
     }
 }
 
