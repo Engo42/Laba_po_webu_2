@@ -26,6 +26,7 @@ background.src = 'sprites/sky.png';
 var tutorial_screen = new Image();
 tutorial_screen.src = 'sprites/tutorial_screen.png';
 var music = new Audio('sound/music.mp3');
+music.volume = 0.6;
 
 var EntityContainer = new Array;
 

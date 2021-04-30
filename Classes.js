@@ -93,6 +93,7 @@ class popcat extends entity {
 		this.img_shoot = new Image();
 		this.img_shoot.src = 'sprites/popcat_pop.png';
 		this.pop_sound = new Audio('sound/pop_sound.mp3');
+		this.pop_sound.volume = 0.5;
 	}
 	frameAction(){
 		this.x -= 2;
@@ -133,6 +134,7 @@ class pogodemon extends entity {
 		this.img_shoot = new Image();
 		this.img_shoot.src = 'sprites/pogodemon_pog.png';
 		this.pog_sound = new Audio('sound/pog_sound.mp3');
+		this.pog_sound.volume = 0.6;
 	}
 	frameAction(){
 		this.x += this.x_dir;
