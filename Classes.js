@@ -79,7 +79,7 @@ class popcat extends entity {
 	constructor(x, y){
 		super(x, y, 160, 160);
 		this.health = 160;
-		this.reload = 70;
+		this.reload = 69;
 		this.y_dir = 1;
 		this.isHittable = 1;
 		this.img_idle = new Image();
@@ -91,7 +91,7 @@ class popcat extends entity {
 	frameAction(){
 		this.x -= 2;
 		this.y += this.y_dir * 2;
-		if (this.y <= 20 || this.y >= canvas.height - 20)
+		if (this.y <= 80 || this.y >= canvas.height - 80)
 			this.y_dir = -this.y_dir;
 		this.reload--;
 		if (this.reload == 0){
@@ -102,6 +102,44 @@ class popcat extends entity {
 	}
 	frameDraw(){
 		if (this.reload > 40)
+			ctx.drawImage(this.img_shoot, this.x - this.width/2, this.y - this.height/2);
+		else
+			ctx.drawImage(this.img_idle, this.x - this.width/2, this.y - this.height/2);
+	}
+}
+
+class pogodemon extends entity {
+	constructor(x, y){
+		super(x, y, 404, 404);
+		this.health = 404;
+		this.reload = 111;
+		this.x_dir = 1;
+		this.y_dir = 1;
+		this.isHittable = 1;
+		this.img_idle = new Image();
+		this.img_idle.src = 'sprites/pogodemon_idle.png';
+		this.img_shoot = new Image();
+		this.img_shoot.src = 'sprites/pogodemon_pog.png';
+		this.pog_sound = new Audio('sound/pog_sound.mp3');
+	}
+	frameAction(){
+		this.x += this.x_dir;
+		this.y += this.y_dir * 4;
+		if (this.y <= 202 || this.y >= canvas.height - 202)
+			this.y_dir = -this.y_dir;
+		if (this.x <= canvas.width - 606 || this.x >= canvas.width - 202)
+			this.x_dir = -this.x_dir;
+		this.reload--;
+		if (this.reload == 0){
+			for (var i = -2; i <= 2; i++){
+				EntityContainer.push(new pogodemonBullet(this.x - 60, this.y, -16*(Math.cos(i*Math.PI/12)), 16*(Math.sin(i*Math.PI/12))));
+			}
+			this.reload = 111;
+			this.pog_sound.play();
+		}
+	}
+	frameDraw(){
+		if (this.reload > 80)
 			ctx.drawImage(this.img_shoot, this.x - this.width/2, this.y - this.height/2);
 		else
 			ctx.drawImage(this.img_idle, this.x - this.width/2, this.y - this.height/2);
@@ -150,6 +188,29 @@ class popcatBullet extends entity {
 		for (var i = 0; i < EntityContainer.length; i++) {
 			if (EntityContainer[i].isHittable == -1 && checkCollision(this, EntityContainer[i]) && EntityContainer[i].invTimer == 0){
 				EntityContainer[i].getDamage(10);
+				this.health = 0;
+			}
+		}
+	}
+	frameDraw(){
+		ctx.drawImage(this.img, this.x - this.width/2, this.y - this.height/2);
+	}
+}
+
+class pogodemonBullet extends entity {
+	constructor(x, y, x_dir, y_dir){
+		super(x, y, 80, 80);
+		this.x_dir = x_dir;
+		this.y_dir = y_dir;
+		this.img = new Image();
+		this.img.src = 'sprites/pogodemon_fireball.png';
+	}
+	frameAction(){
+		this.x += this.x_dir;
+		this.y += this.y_dir;
+		for (var i = 0; i < EntityContainer.length; i++) {
+			if (EntityContainer[i].isHittable == -1 && checkCollision(this, EntityContainer[i]) && EntityContainer[i].invTimer == 0){
+				EntityContainer[i].getDamage(25);
 				this.health = 0;
 			}
 		}

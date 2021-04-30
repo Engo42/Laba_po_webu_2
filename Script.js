@@ -6,10 +6,9 @@ var d_press = false;
 var l_press = false;
 var r_press = false;
 var shoot_press = false;
-var enemy_spawn_timer = 60;
-var wave = 0;
-var enemy_count = 0;
-var enemies_left = 0;
+var popcat_spawn_timer = 60;
+var pogodemon_spawn_timer = 600;
+var rock_spawn_timer = 1200;
 var score = 0;
 var best_score = 0;
 var keyboard_confirm = false;
@@ -37,7 +36,6 @@ function frameLoop() {
 				|| EntityContainer[i].x > canvas.width + 100 || EntityContainer.y > canvas.height + 100
 				|| EntityContainer[i].health <= 0){
 					if (EntityContainer[i].isHittable == 1 && EntityContainer[i].health <= 0){
-						enemy_count--;
 						score += 100;
 					}
 					if (EntityContainer[i].isHittable == -1){
@@ -95,28 +93,17 @@ function draw() {
 			break;
 	}
 }
-function nextWave() {
-	wave++;
-	switch(wave){
-		case 1:
-			enemies_left = 10;
-			break;
-	}
-}
 function spawnEnemies() {
-	if (enemies_left == 0 && enemy_count == 0)
-		nextWave();
-	
-	enemy_spawn_timer--;
-	switch(wave){
-		case 1:
-			if (enemy_spawn_timer == 0 && enemies_left > 0){
-				enemy_spawn_timer = 180;
-				EntityContainer.push(new popcat(canvas.width + 50, 20 + (canvas.height - 40) * Math.random()));
-				enemy_count++;
-				enemies_left--;
-			}
-			break;
+	popcat_spawn_timer--;
+	pogodemon_spawn_timer--;
+	rock_spawn_timer--;
+	if (popcat_spawn_timer == 0){
+		popcat_spawn_timer = 120;
+		EntityContainer.push(new popcat(canvas.width + 50, 40 + (canvas.height - 80) * Math.random()));
+	}
+	if (pogodemon_spawn_timer == 0){
+		pogodemon_spawn_timer = 600;
+		EntityContainer.push(new pogodemon(canvas.width - 303, 202 + (canvas.height - 404) * Math.random()));
 	}
 }
 function gameOpen(){
@@ -142,10 +129,9 @@ function gameOpen(){
 }
 function gameStart(){	
 	gameState = 1;
-	enemy_spawn_timer = 60;
-	wave = 0;
-	enemy_count = 0;
-	enemies_left = 0;
+	popcat_spawn_timer = 60;
+	pogodemon_spawn_timer = 600;
+	rock_spawn_timer = 1200;
 	score = 0;
 	if (keyboard_confirm == false){
 		document.removeEventListener("keydown", keyDownHandler, false);
@@ -164,7 +150,6 @@ function gameStart(){
 	}
 	Player = new player(100, 100, 20, 20);
 	EntityContainer.push(Player);
-	nextWave();
 }
 function gameOver(){
 	gameState = 2;
