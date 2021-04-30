@@ -75,8 +75,6 @@ function touchMoveHandler(e) {
 	var touch = e.targetTouches[0];
 	target_x = (touch.pageX - canvas.offsetLeft)*scaleX;
     target_y = (touch.pageY - canvas.offsetTop)*scaleY;
-	ctx.fillText("Xmov " + touch.pageX, 5, canvas.height - 85);
-	ctx.fillText("Ymov " + touch.pageY, 5, canvas.height - 65);
 }
 document.addEventListener("touchstart", touchMoveHandler, false);
 document.addEventListener("touchend", touchEndHandler, false);
