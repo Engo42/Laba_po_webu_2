@@ -87,6 +87,7 @@ class popcat extends entity {
 		this.reload = 69;
 		this.y_dir = 1;
 		this.isHittable = 1;
+		this.award = 100;
 		this.img_idle = new Image();
 		this.img_idle.src = 'sprites/popcat_idle.png';
 		this.img_shoot = new Image();
@@ -126,6 +127,7 @@ class pogodemon extends entity {
 		this.x_dir = 1;
 		this.y_dir = 1;
 		this.isHittable = 1;
+		this.award = 400;
 		this.img_idle = new Image();
 		this.img_idle.src = 'sprites/pogodemon_idle.png';
 		this.img_shoot = new Image();

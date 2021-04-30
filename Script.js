@@ -43,7 +43,7 @@ function frameLoop() {
 				|| EntityContainer[i].x > canvas.width + 400 || EntityContainer.y > canvas.height + 400
 				|| EntityContainer[i].health <= 0){
 					if (EntityContainer[i].isHittable == 1 && EntityContainer[i].health <= 0){
-						score += 100;
+						score += EntityContainer[i].award;
 					}
 					if (EntityContainer[i].isHittable == -1){
 						gameOver();
